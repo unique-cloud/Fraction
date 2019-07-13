@@ -133,7 +133,7 @@ Fraction operator/(const Fraction &lhs, const Fraction &rhs)
 
 bool operator==(const Fraction &lhs, const Fraction &rhs)
 {
-    return lhs.numerator() * rhs.denominator() == rhs.denominator() * rhs.numerator();
+    return lhs.numerator() * rhs.denominator() == lhs.denominator() * rhs.numerator();
 }
 
 bool operator!=(const Fraction &lhs, const Fraction &rhs)

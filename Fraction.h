@@ -1,3 +1,9 @@
+// Author: Xiaorui Tang
+// Date: 07/12/2019
+
+// This is a Fraction class implemented in C++that supports the following operations:
+// addition, subtraction, multiplication, division, equality/non-equality, greater than/less than, and display.
+
 #ifndef _FRACTION_FRACTION_H_
 #define _FRACTION_FRACTION_H_
 
