@@ -75,30 +75,30 @@ int Fraction::gcd(int a, int b) const
 
 void Fraction::reduction()
 {
-    if (this->numerator_ == 0)
-    {   
-        this->denominator_ = 1;
+    if (numerator_ == 0)
+    {
+        denominator_ = 1;
         return;
     }
 
     int sign = 1;
-    if (this->numerator_ < 0)
+    if (numerator_ < 0)
     {
         sign *= -1;
-        this->numerator_ *= -1;
+        numerator_ *= -1;
     }
-    if (this->denominator_ < 0)
+    if (denominator_ < 0)
     {
         sign *= -1;
-        this->denominator_ *= -1;
+        denominator_ *= -1;
     }
 
-    auto div = gcd(this->numerator_, this->denominator_);
-    this->numerator_ /= div;
-    this->denominator_ /= div;
+    auto div = gcd(numerator_, denominator_);
+    numerator_ /= div;
+    denominator_ /= div;
 
     // always associate sign with numerator
-    this->numerator_ *= sign;
+    numerator_ *= sign;
 }
 
 Fraction::operator std::string() const
