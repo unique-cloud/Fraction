@@ -11,7 +11,7 @@ void unitTest()
 {
      auto ut = new UTest("Fraction");
 
-     Fraction *a, *b, *c, *d;
+     Fraction *a, *b, *c, *d, *e;
 
      /***************************** test constructor *******************************/
      a = new Fraction();      // 0
@@ -133,24 +133,61 @@ void unitTest()
      c = new Fraction(12.125);
      d = new Fraction(0.0);
 
-     ut->test("reduction", a->numerator() == 3 && a->denominator() == 5);
-     ut->test("reduction", b->numerator() == -14 && b->denominator() == 5);
-     ut->test("reduction", c->numerator() == 97 && c->denominator() == 8);
-     ut->test("reduction", d->numerator() == 0 && d->denominator() == 1);
+     ut->test("decimal", a->numerator() == 3 && a->denominator() == 5);
+     ut->test("decimal", b->numerator() == -14 && b->denominator() == 5);
+     ut->test("decimal", c->numerator() == 97 && c->denominator() == 8);
+     ut->test("decimal", d->numerator() == 0 && d->denominator() == 1);
 
      *c = -0.25 + *b;
-     ut->test("reduction", c->numerator() == -61 && c->denominator() == 20);
+     ut->test("decimal", c->numerator() == -61 && c->denominator() == 20);
      *c = 0.0 - *b;
-     ut->test("reduction", c->numerator() == 14 && c->denominator() == 5);
+     ut->test("decimal", c->numerator() == 14 && c->denominator() == 5);
      *c = -3.8 * *b;
-     ut->test("reduction", c->numerator() == 266 && c->denominator() == 25);
+     ut->test("decimal", c->numerator() == 266 && c->denominator() == 25);
      *c = 12.0 / *b;
-     ut->test("reduction", c->numerator() == -30 && c->denominator() == 7);
+     ut->test("decimal", c->numerator() == -30 && c->denominator() == 7);
+
+     // test if float type input could be casted to double automatically
+     float f2 = -3.5;
+     *c = f2 * *b;
+     ut->test("decimal", c->numerator() == 49 && c->denominator() == 5);
 
      delete a;
      delete b;
      delete c;
      delete d;
+
+     // test large input
+     // any input not in range (INT_MIN, INT_MAX] will get exception
+     try
+     {
+          e = new Fraction(12345678901.00);
+          ut->test("decimal", false);
+          delete e;
+     }
+     catch (exception &e)
+     {
+          ut->test("decimal", e.what() == string("Decimal value is too large!"));
+     }
+     try
+     {
+          e = new Fraction((double)numeric_limits<int>::min());
+          ut->test("decimal", false);
+          delete e;
+     }
+     catch (exception &e)
+     {
+          ut->test("decimal", e.what() == string("Decimal value is too large!"));
+     }
+
+     e = new Fraction((double)numeric_limits<int>::max());
+     ut->test("decimal", e->numerator() == numeric_limits<int>::max() && e->denominator() == 1);
+     e = new Fraction(2147483646.5);
+     ut->test("decimal", e->numerator() == 2147483646 && e->denominator() == 1);
+
+     delete e;
+
+     /********************************* test large arithmtic ********************************/
 
      /********************************* test display ********************************/
      a = new Fraction(5);     // 5
@@ -175,6 +212,44 @@ void unitTest()
      delete b;
      delete c;
      delete d;
+
+     /********************************* test gcd ********************************/
+     a = new Fraction();
+
+     auto result = a->gcd(-100, -200);
+     ut->test("gcd", result == -100);
+     result = a->gcd(-190, 290);
+     ut->test("gcd", result == 10);
+     result = a->gcd(180, -2);
+     ut->test("gcd", result == -2);
+     result = a->gcd(-1, 2);
+     ut->test("gcd", result == 1);
+
+     result = a->gcd(0, -50);
+     ut->test("gcd", result == -50);
+     result = a->gcd(-50, 0);
+     ut->test("gcd", result == -50);
+
+     delete a;
+
+     /********************************* test lcm ********************************/
+     a = new Fraction();
+
+     result = a->lcm(-100, -200);
+     ut->test("lcm", result == 200);
+     result = a->lcm(-190, 290);
+     ut->test("lcm", result == 5510);
+     result = a->lcm(180, -2);
+     ut->test("lcm", result == 180);
+     result = a->lcm(-1, 2);
+     ut->test("lcm", result == 2);
+
+     result = a->lcm(0, -50);
+     ut->test("lcm", result == 0);
+     result = a->lcm(-50, 0);
+     ut->test("lcm", result == 0);
+
+     delete a;
 
      /********************************* test result ********************************/
      ut->report();
@@ -235,7 +310,7 @@ int main()
           << endl
           << endl;
 
-     cout << "We also provide a choice that you can create a fraction object using dicimal values, like "
+     cout << "We also provide a choice that you can create a fraction object using decimal values, like "
           << endl;
 
      cout << endl;
@@ -245,6 +320,7 @@ int main()
      Fraction d(12.125);
      Fraction e(-0.45);
      Fraction f(0.0);
+
      cout << "Create fraction from 12.125 is: " << d << endl;
      cout << "Create fraction from -0.45 is: " << e << endl;
      cout << "Create fraction from 0.0 is: " << f << endl;
