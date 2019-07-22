@@ -25,7 +25,7 @@ class Fraction
 
 public:
     Fraction(int numerator = 0, int denominator = 1);
-    Fraction(double decimalx);
+    Fraction(double decimal);
     // Fraction(float decimal) : Fraction((double)decimal) {}
     Fraction(const Fraction &rhs) : numerator_(rhs.numerator_), denominator_(rhs.denominator_) {}
     Fraction(Fraction &&rhs) noexcept;
@@ -38,7 +38,10 @@ public:
     // use euclidean algorithm to get the greatest common divisors of two integers
     // the sign of result will always same with b unless b == 0
     // gcd(0, k) == gcd(k, 0) == k, gcd(0, 0) == 0
-    static int gcd(int a, int b);
+    static long long gcd(long long a, long long b);
+
+    // return 0 if either of two number is 0
+    // otherwise, return a positive number as lcm
     static long long lcm(int a, int b);
 
     int numerator() const { return numerator_; }

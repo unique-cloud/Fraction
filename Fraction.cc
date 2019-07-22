@@ -100,7 +100,7 @@ void Fraction::reset()
     denominator_ = 1;
 }
 
-int Fraction::gcd(int a, int b)
+long long Fraction::gcd(long long a, long long b)
 {
     if (b == 0)
         return a;
@@ -142,8 +142,12 @@ Fraction::operator double() const
 
 Fraction operator+(const Fraction &lhs, const Fraction &rhs)
 {
-    auto d = Fraction::lcm(lhs.denominator(), rhs.denominator());
-    auto n = d / lhs.denominator() * lhs.numerator() + d / rhs.denominator() * rhs.numerator();
+    auto n = static_cast<long long>(lhs.numerator()) * rhs.denominator() + static_cast<long long>(lhs.denominator()) * rhs.numerator();
+    auto d = static_cast<long long>(lhs.denominator() * rhs.denominator());
+
+    auto div = Fraction::gcd(n, d);
+    n /= div;
+    d /= div;
 
     if (n > int_max || d > int_max)
         throw std::overflow_error("Fraction arithmetic overflow!");
@@ -197,12 +201,12 @@ bool operator!=(const Fraction &lhs, const Fraction &rhs)
 
 bool operator<(const Fraction &lhs, const Fraction &rhs)
 {
-    return (double)lhs < (double)rhs;
+    return static_cast<long long>(lhs.numerator()) * rhs.denominator() < static_cast<long long>(lhs.denominator() * rhs.numerator());
 }
 
 bool operator>(const Fraction &lhs, const Fraction &rhs)
 {
-    return (double)lhs > (double)rhs;
+    return static_cast<long long>(lhs.numerator()) * rhs.denominator() > static_cast<long long>(lhs.denominator() * rhs.numerator());
 }
 
 std::ostream &operator<<(std::ostream &o, const Fraction &rhs)
